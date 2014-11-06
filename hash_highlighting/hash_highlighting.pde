@@ -5,12 +5,14 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 //The string input, this text will be parsed for words
-String str = "uint factorial(uint fact) {\n    if (fact <= 1) return 1;\n    else return fact * factorial(fact - 1);\n}";
+String str;
 
 void setup() {
+    str = loadFileAsString("hash_highlighting.pde");
     size(int(40 + textWidth(str)),40 + (numberOfMatches("(\\n)",str) * 20));
     background(255);
     highlightPrint(str,20,20,true);
+    saveFrame("out.png");
 }
 
 void highlightPrint(final String content, final int x, final int y, final boolean print_out) {
@@ -106,4 +108,11 @@ int numberOfMatches(String regex, String text) {
     int count = 0;
     while(m.find()) count++;
     return count;
+}
+
+String loadFileAsString(String path) {
+    String[] str_arr = loadStrings(path);
+    String str = "";
+    for (int i = 0; i < str_arr.length; i++) str += str_arr[i] + "\n";
+    return str;
 }
