@@ -6,11 +6,15 @@ import java.util.regex.Matcher;
 
 //The string input, this text will be parsed for words
 String str;
+boolean darkmode = true;
 
 void setup() {
+    textFont(loadFont("Monospaced-48.vlw"));
     str = loadFileAsString("hash_highlighting.pde");
+    textSize(12);
     size(int(40 + textWidth(str)),40 + (numberOfMatches("(\\n)",str) * 20));
-    background(255);
+    if (darkmode) background(35);
+    else background(255);
     highlightPrint(str,20,20,true);
     saveFrame("out.png");
 }
@@ -33,7 +37,8 @@ void highlightPrint(final String content, final int x, final int y, final boolea
             need to be printed up until then as black
         */
         while (wrk_index < m.start()) {
-            fill(0); //Fill black, as this segment isn't being highlighted.
+            if (darkmode) fill(255);
+            else fill(0); //Fill black, as this segment isn't being highlighted.
             if (content.charAt(wrk_index) == '\n') {
                 /*
                     Newline resets x, adds to y
@@ -59,7 +64,7 @@ void highlightPrint(final String content, final int x, final int y, final boolea
         wrk_index = m.end();
     }
     if (wrk_index < content.length()) {
-        fill(0);
+        if (darkmode) fill(255);
         for (wrk_index = wrk_index; wrk_index < content.length(); wrk_index++) {
             if (content.charAt(wrk_index) == '\n') {
                 wrk_x = x;
@@ -87,15 +92,18 @@ color colourHash(final String word) {
         r += int(int(word.charAt(i)) * 15632.7);
     }
     r = r % 200;
+    if (darkmode) r += 55;
     for (int i = 0; i < word.length(); i++) {
         b += int(int(word.charAt(i)) * 27723.996);
     }
     b = b % 200;
+    if (darkmode) b += 55;
     /*
         The output of red and blue weigh on what green will be, as their values
         are subracted from total_spent.
     */
     g = int((total_spend - (r + b)) * 991991.999221) % 200;
+    if (darkmode) g += 55;
     return color(r,g,b);
 }
 
